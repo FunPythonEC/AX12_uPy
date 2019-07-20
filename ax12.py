@@ -11,7 +11,7 @@ RESET       = 		0x06
 SYNC_WRITE  = 		0x83
 
 BROADCAST_ID = 0xfe
-PACKET_HEADER = bytes((0xff, 0xff))
+HEADER = [255,255]
 
 # CONTROL TABLE (ADDRESSES)
 # (see the official Dynamixel AX-12 User's manual p.12)
@@ -50,3 +50,52 @@ REGISTRED_INSTRUCTION 		= 0x2c
 MOVING 						= 0x2e
 LOCK 						= 0x2f
 PUNCH 						= 0x30
+
+
+class ax12(object):
+	def __init__(self, dir_com, baudrate=1000000, serialid=2):
+
+		self.baudrate=baudrate
+		self.serialid=serialid
+		self.dir_com=m.Pin(dir_com,m.Pin.OUT) #a pin for the communication direction is defined
+
+		#uart object defined
+		try:
+			self.uart = m.UART(self.serialid,self.baudrate)
+			self.uart.init(self.baudrate, bits=8, parity=None, stop=1)
+		except Exception as e:
+			print(e)
+
+def makePacket(ID, instr, params=None):
+
+	pkt = []
+	pkt += [ID]
+	if params:
+		pkt += [length(params)+2]
+    else: pkt += [2]
+	pkt += [instr]  # instruction
+	if params:
+		pkt += params
+    pkt += checksum(pkt)
+	pkt = HEADER+pkt  # header and reserved byte
+	
+	print(pkt)
+	return pkt
+
+def word(l, h):
+	"""
+	Given a low and high bit, converts the number back into a word.
+	"""
+	return (h << 8) + l
+
+def le(h):
+	"""
+	Little-endian, takes a 16b number and returns an array arrange in little
+	endian or [low_byte, high_byte].
+	"""
+	h &= 0xffff  # make sure it is 16 bits
+	return [h & 0xff, h >> 8]
+
+def checksum(packet):
+	#Instruction Checksum = ~( ID + Length + Instruction + Parameter1 + … Parameter N )
+	return le(sum(packet))[0]
