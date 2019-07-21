@@ -3,12 +3,12 @@ import time
 import utime
 
 PING 		= 		0x01
-READ_DATA   = 		0x02
-WRITE_DATA  = 		0x03
-REG_WRITE   = 		0x04
+READ        = 		0x02
+WRITE       = 		0x03
+REG         = 		0x04
 ACTION      = 		0x05
 RESET       = 		0x06
-SYNC_WRITE  = 		0x83
+SYNC        = 		0x83
 
 BROADCAST_ID = 0xfe
 HEADER = [255,255]
@@ -70,6 +70,54 @@ class ax12(object):
 
 #==============================EEPROM METHODS======================================
 #WRITING METHODS ONLY
+
+	def set_id(self, ID, NID):
+		pkt=bytearray(makePacket(ID,WRITE,[NID]))
+		self.uart.write(pkt)
+
+	def set_baud_rate(self,ID,baudrate):
+		pkt=bytearray(makePacket(ID,WRITE,[baudrate]))
+		self.uart.write(pkt)
+
+	def set_delay(self,ID,delay):
+		pkt=bytearray(makePacket(ID,WRITE,[delay]))
+		self.uart.write(pkt)
+
+	def set_cw_angle_limit(self,ID,angle):
+		pkt=bytearray(makePacket(ID,WRITE,le(angle)))
+		self.uart.write(pkt)
+
+	def set_ccw_angle_limit(self,ID,angle):
+		pkt=bytearray(makePacket(ID,WRITE,le(angle)))
+		self.uart.write(pkt)
+
+	def set_baud_rate(self,ID,baudrate):
+		pkt=bytearray(makePacket(ID,WRITE,[baudrate]))
+		self.uart.write(pkt)
+
+	def set_temperature_limit(self,ID,temp):
+		pkt=bytearray(makePacket(ID,WRITE,[temp]))
+		self.uart.write(pkt)
+
+	def set_lowest_temperature(self,ID,temp):
+		pkt=bytearray(makePacket(ID,WRITE,[temp]))
+		self.uart.write(pkt)
+
+	def set_highest_temperature(self,ID,temp):
+		pkt=bytearray(makePacket(ID,WRITE,[temp]))
+		self.uart.write(pkt)
+
+	def set_max_torque(self,ID,torque):
+		pkt=bytearray(makePacket(ID,WRITE,le(torque)))
+		self.uart.write(pkt)
+
+	def set_alarm_led(self,ID,alarm):
+		pkt=bytearray(makePacket(ID,WRITE,[alarm]))
+		self.uart.write(pkt)
+
+	def set_alarm_shutdown(self,ID,alarm):
+		pkt=bytearray(makePacket(ID,WRITE,[alarm]))
+		self.uart.write(pkt)
 
 #READING METHODS ONLY
 
