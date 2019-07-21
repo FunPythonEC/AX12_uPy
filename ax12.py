@@ -53,6 +53,7 @@ PUNCH 						= 0x30
 
 
 class ax12(object):
+
 	def __init__(self, dir_com, baudrate=1000000, serialid=2):
 
 		self.baudrate=baudrate
@@ -65,6 +66,18 @@ class ax12(object):
 			self.uart.init(self.baudrate, bits=8, parity=None, stop=1)
 		except Exception as e:
 			print(e)
+
+
+#==============================EEPROM METHODS======================================
+#WRITING METHODS ONLY
+
+#READING METHODS ONLY
+
+
+#==============================RAM METHODS=========================================
+#WRITING METHODS ONLY
+
+#READING METHODS ONLY
 
 def makePacket(ID, instr, params=None):
 
