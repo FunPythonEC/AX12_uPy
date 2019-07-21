@@ -122,14 +122,26 @@ class ax12(object):
 #WRITING METHODS ONLY
 
 	def set_torque_enable(self,ID,enable):
-		pkt=bytearray(makePacket(ID,WRITE,[enable]))
+		pkt=bytearray(makePacket(ID,WRITE,[TORQUE_ENABLE, enable]))
 		self.uart.write(pkt)
 
 	def set_led(self,ID,led):
-		pkt=bytearray(makePacket(ID,WRITE,[led]))
+		pkt=bytearray(makePacket(ID,WRITE,[LED, led]))
 		self.uart.write(pkt)
 
-	def goal_position(self,ID,led):
+	def goal_position(self,ID,angle):
+		pkt=bytearray(makePacket(ID,WRITE,[GOAL_POSITION]+le(int(angle/300*1023))))
+		self.uart.write(pkt)
+
+	def goal_speed(self,ID,speed):
+		pkt=bytearray(makePacket(ID,WRITE,[MOVING_SPEED]+le(speed)))
+		self.uart.write(pkt)
+
+	def set_torque_limit(self,ID,torque):
+		pkt=bytearray(makePacket(ID,WRITE,[TORQUE_LIMIT]+le(torque)))
+		self.uart.write(pkt)
+
+	def set_led(self,ID,led):
 		pkt=bytearray(makePacket(ID,WRITE,[led]))
 		self.uart.write(pkt)
 
