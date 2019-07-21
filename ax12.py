@@ -18,7 +18,7 @@ HEADER = [255,255]
 
 MODEL_NUMBER 				= 0x00
 VERSION_OF_FIRMWARE 		= 0x02
-ID 							= 0x03
+SET_ID 							= 0x03
 BAUD_RATE 					= 0x04
 RETURN_DELAY_TIME 			= 0x05
 CW_ANGLE_LIMIT 				= 0x06
@@ -72,51 +72,47 @@ class ax12(object):
 #WRITING METHODS ONLY
 
 	def set_id(self, ID, NID):
-		pkt=bytearray(makePacket(ID,WRITE,[NID]))
+		pkt=bytearray(makePacket(ID,WRITE,[SET_ID, NID]))
 		self.uart.write(pkt)
 
 	def set_baud_rate(self,ID,baudrate):
-		pkt=bytearray(makePacket(ID,WRITE,[baudrate]))
+		pkt=bytearray(makePacket(ID,WRITE,[BAUD_RATE, baudrate]))
 		self.uart.write(pkt)
 
 	def set_delay(self,ID,delay):
-		pkt=bytearray(makePacket(ID,WRITE,[delay]))
+		pkt=bytearray(makePacket(ID,WRITE,[RETURN_DELAY_TIME, delay]))
 		self.uart.write(pkt)
 
 	def set_cw_angle_limit(self,ID,angle):
-		pkt=bytearray(makePacket(ID,WRITE,le(angle)))
+		pkt=bytearray(makePacket(ID,WRITE,[CW_ANGLE_LIMIT]+le(angle)))
 		self.uart.write(pkt)
 
 	def set_ccw_angle_limit(self,ID,angle):
-		pkt=bytearray(makePacket(ID,WRITE,le(angle)))
-		self.uart.write(pkt)
-
-	def set_baud_rate(self,ID,baudrate):
-		pkt=bytearray(makePacket(ID,WRITE,[baudrate]))
+		pkt=bytearray(makePacket(ID,WRITE,[CCW_ANGLE_LIMIT]+le(angle)))
 		self.uart.write(pkt)
 
 	def set_temperature_limit(self,ID,temp):
-		pkt=bytearray(makePacket(ID,WRITE,[temp]))
+		pkt=bytearray(makePacket(ID,WRITE,[HIGHEST_LIMIT_TEMPERATURE, temp]))
 		self.uart.write(pkt)
 
-	def set_lowest_temperature(self,ID,temp):
-		pkt=bytearray(makePacket(ID,WRITE,[temp]))
+	def set_lowest_voltage(self,ID,volt):
+		pkt=bytearray(makePacket(ID,WRITE,[HIGHEST_LIMIT_VOLTAGE, volt]))
 		self.uart.write(pkt)
 
-	def set_highest_temperature(self,ID,temp):
-		pkt=bytearray(makePacket(ID,WRITE,[temp]))
+	def set_highest_voltage(self,ID,volt):
+		pkt=bytearray(makePacket(ID,WRITE,[LOWEST_LIMIT_VOLTAGE, volt]))
 		self.uart.write(pkt)
 
 	def set_max_torque(self,ID,torque):
-		pkt=bytearray(makePacket(ID,WRITE,le(torque)))
+		pkt=bytearray(makePacket(ID,WRITE,[MAX_TORQUE]+le(torque)))
 		self.uart.write(pkt)
 
 	def set_alarm_led(self,ID,alarm):
-		pkt=bytearray(makePacket(ID,WRITE,[alarm]))
+		pkt=bytearray(makePacket(ID,WRITE,[ALARM_LED, alarm]))
 		self.uart.write(pkt)
 
 	def set_alarm_shutdown(self,ID,alarm):
-		pkt=bytearray(makePacket(ID,WRITE,[alarm]))
+		pkt=bytearray(makePacket(ID,WRITE,[ALARM_SHUTDOWN, alarm]))
 		self.uart.write(pkt)
 
 #READING METHODS ONLY
@@ -124,6 +120,18 @@ class ax12(object):
 
 #==============================RAM METHODS=========================================
 #WRITING METHODS ONLY
+
+	def set_torque_enable(self,ID,enable):
+		pkt=bytearray(makePacket(ID,WRITE,[enable]))
+		self.uart.write(pkt)
+
+	def set_led(self,ID,led):
+		pkt=bytearray(makePacket(ID,WRITE,[led]))
+		self.uart.write(pkt)
+
+	def goal_position(self,ID,led):
+		pkt=bytearray(makePacket(ID,WRITE,[led]))
+		self.uart.write(pkt)
 
 #READING METHODS ONLY
 
