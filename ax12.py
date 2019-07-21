@@ -63,7 +63,7 @@ class ax12(object):
 		#uart object defined
 		try:
 			self.uart = m.UART(self.serialid,self.baudrate)
-			self.uart.init(self.baudrate, bits=8, parity=None, stop=1)
+			self.uart.init(self.baudrate, bits=8, parity=None, stop=1, txbuf=0)
 		except Exception as e:
 			print(e)
 
