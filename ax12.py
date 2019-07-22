@@ -152,14 +152,14 @@ def makePacket(ID, instr, params=None):
 	pkt = []
 	pkt += [ID]
 	if params:
-		pkt += [length(params)+2]
-    else: pkt += [2]
+		pkt += [len(params)+2]
+	else:
+		pkt += [2]
 	pkt += [instr]  # instruction
 	if params:
 		pkt += params
-    pkt += checksum(pkt)
+	pkt += [checksum(pkt)]
 	pkt = HEADER+pkt  # header and reserved byte
-	
 	print(pkt)
 	return pkt
 
@@ -179,4 +179,4 @@ def le(h):
 
 def checksum(packet):
 	#Instruction Checksum = ~( ID + Length + Instruction + Parameter1 + … Parameter N )
-	return le(sum(packet))[0]
+	return le(~(sum(packet)))[0]
