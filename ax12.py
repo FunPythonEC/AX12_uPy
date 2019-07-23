@@ -1,7 +1,7 @@
-import machine as m
-import time
-import utime
+import machine as m #control uart and dir_com
+import utime #time control
 
+#every instruction constants
 PING 		= 		0x01
 READ        = 		0x02
 WRITE       = 		0x03
@@ -15,10 +15,9 @@ HEADER = [255,255]
 
 # CONTROL TABLE (ADDRESSES)
 # (see the official Dynamixel AX-12 User's manual p.12)
-
 MODEL_NUMBER 				= 0x00
 VERSION_OF_FIRMWARE 		= 0x02
-SET_ID 							= 0x03
+SET_ID 						= 0x03
 BAUD_RATE 					= 0x04
 RETURN_DELAY_TIME 			= 0x05
 CW_ANGLE_LIMIT 				= 0x06
@@ -51,9 +50,11 @@ MOVING 						= 0x2e
 LOCK 						= 0x2f
 PUNCH 						= 0x30
 
-
+#object to initialize the servo
 class ax12(object):
 
+	#for the constructor, only dir_com needs to be specifiec
+	#which represents which pin will control the direction of communication.
 	def __init__(self, dir_com, baudrate=1000000, serialid=2):
 
 		self.baudrate=baudrate
@@ -67,7 +68,9 @@ class ax12(object):
 		except Exception as e:
 			print(e)
 
-
+#METHODS
+#in the methods, every parameter that needs to be specified as a Low/High Byte
+#is defined with the help of the le() function
 #==============================EEPROM METHODS======================================
 #WRITING METHODS ONLY
 
@@ -116,7 +119,7 @@ class ax12(object):
 		self.uart.write(pkt)
 
 #READING METHODS ONLY
-
+#will be soon implemented
 
 #==============================RAM METHODS=========================================
 #WRITING METHODS ONLY
@@ -146,7 +149,11 @@ class ax12(object):
 		self.uart.write(pkt)
 
 #READING METHODS ONLY
+#will be soon implemented
 
+#=================================================================
+
+#function to construct a packet easily
 def makePacket(ID, instr, params=None):
 
 	pkt = []
@@ -163,6 +170,7 @@ def makePacket(ID, instr, params=None):
 	print(pkt)
 	return pkt
 
+#turn Low-High byte into decimal
 def word(l, h):
 	"""
 	Given a low and high bit, converts the number back into a word.
@@ -177,6 +185,6 @@ def le(h):
 	h &= 0xffff  # make sure it is 16 bits
 	return [h & 0xff, h >> 8]
 
-def checksum(packet):
+def checksum(packet): #needed to include checksum easily in packet
 	#Instruction Checksum = ~( ID + Length + Instruction + Parameter1 + … Parameter N )
 	return le(~(sum(packet)))[0]
