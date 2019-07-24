@@ -4,7 +4,7 @@ Library to control AX12 Dynamixel motors with MicroPython.
 This library has been  by consulting the following link: https://github.com/jeremiedecock/pyax12
 
 ## Hardware
-Debido a que los microcontroladores ESP soportan una comunicación por UART mientras los motores Dynamixel es OneWire, es necesario un hardware especifico que te permita esta interfaz para la comunicación de los distintos protocolos, para ello se esta diseñando en el siguiente repositorio el hardware necesario: [OpenFPy](https://github.com/FunPythonEC/OpenFpy)
+Since ESPXXXX MicroControllers support a UART communication, while Dynamixel Servo Motors use OneWire, an specific hardware that allows this communication between these two protocols is needed. For that, a driver board is being developed in the following repo: [OpenFPy](https://github.com/FunPythonEC/OpenFpy)
 
 ## Comunicación con el motor
 
@@ -20,10 +20,10 @@ A pesar de que para controlar el motor se puede utilizar la configuracion de [UA
 
 
 ## `AX12.PY`
+ This is the core script that allows the use of Dynamixel Servos with MicroPython. In it a class called `ax12` has been defined with its respective constructor and methods. How to use it is specified below.
 
-En este script se ha incluido todo lo necesario para poder hacer uso del motor. En este se puede encontrar la clase `ax12` con su respectivo constructor y metodos. Su uso es especificado a continuación
 
-### Diagrama Interfaz UART-To-1Wire
+### UART-To-1Wire
 
 ![UART to 1-Wire](https://hackaday.com/wp-content/uploads/2015/01/onewire.png?w=800)
 
@@ -73,7 +73,7 @@ Tener en cuenta que para que el EEPROM sea modificable, es necesario que TORQUE_
 
 |Metodo|¿Qué hace?|Descripcion de parametros|
 |-----------|-----------|--------------------------------------|
-|set_control_mode(ID, mode)|Ayuda a setear el modo de control del motor.|**ID**: corresponde al id del motor al cual se le quiere cambiar el modo. Puede ser un valor desde 1 hasta 253. **mode**: puede ser 1 o 2. 1 para el modo WHEEL y 2 para JOINT|
+|||**|
 |set_id(ID,newID)|Ayuda a cambiar o setear un id nuevo a uno de los motores.|**ID**: es el id del motor al que se le cambiara. **newID**: es el nuevo ID que se sobreescribira|
 |set_baudrate(ID,baudrate)|Seteo de baud rate a uno de los motores.|**baudrate**:los valores van desde 0 a 3. Cada uno especificando un valor de baudios tal y como se muestra en la documentación del motor, que puede ser desde 9600 hasta 1000000.|
 |set_cw_angle_limit(ID,angle)|Seteo de ángulo límite para el movimiento del motor en sentido horario.|**angle**: en este caso, por las capacidades del motor xl320, el valor de angulos para el cual permite el giro funcionando como un servo motor (JOINT mode) es desde 0 hasta 300 grados.|
@@ -130,3 +130,4 @@ Tener en cuenta que todos los metodos de lectura, al usarlos, por ahora imprimen
 
 
 ## Referencias
+
