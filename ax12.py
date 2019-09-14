@@ -75,48 +75,37 @@ class ax12(object):
 #WRITING METHODS ONLY
 
 	def set_id(self, ID, NID):
-		pkt=bytearray(makePacket(ID,WRITE,[SET_ID, NID]))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[SET_ID, NID])), self.uart, self.dir_com)
 
 	def set_baud_rate(self,ID,baudrate):
-		pkt=bytearray(makePacket(ID,WRITE,[BAUD_RATE, baudrate]))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[BAUD_RATE, baudrate])), self.uart, self.dir_com)
 
 	def set_delay(self,ID,delay):
-		pkt=bytearray(makePacket(ID,WRITE,[RETURN_DELAY_TIME, delay]))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[RETURN_DELAY_TIME, delay])), self.uart, self.dir_com)
 
 	def set_cw_angle_limit(self,ID,angle):
-		pkt=bytearray(makePacket(ID,WRITE,[CW_ANGLE_LIMIT]+le(angle)))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[CW_ANGLE_LIMIT]+le(angle))), self.uart, self.dir_com)
 
 	def set_ccw_angle_limit(self,ID,angle):
-		pkt=bytearray(makePacket(ID,WRITE,[CCW_ANGLE_LIMIT]+le(angle)))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[CCW_ANGLE_LIMIT]+le(angle))), self.uart, self.dir_com)
 
 	def set_temperature_limit(self,ID,temp):
-		pkt=bytearray(makePacket(ID,WRITE,[HIGHEST_LIMIT_TEMPERATURE, temp]))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[HIGHEST_LIMIT_TEMPERATURE, temp])), self.uart, self.dir_com)
 
 	def set_lowest_voltage(self,ID,volt):
-		pkt=bytearray(makePacket(ID,WRITE,[HIGHEST_LIMIT_VOLTAGE, volt]))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[HIGHEST_LIMIT_VOLTAGE, volt])), self.uart, self.dir_com)
 
 	def set_highest_voltage(self,ID,volt):
-		pkt=bytearray(makePacket(ID,WRITE,[LOWEST_LIMIT_VOLTAGE, volt]))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[LOWEST_LIMIT_VOLTAGE, volt])), self.uart, self.dir_com)
 
 	def set_max_torque(self,ID,torque):
-		pkt=bytearray(makePacket(ID,WRITE,[MAX_TORQUE]+le(torque)))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[MAX_TORQUE]+le(torque))), self.uart, self.dir_com)
 
 	def set_alarm_led(self,ID,alarm):
-		pkt=bytearray(makePacket(ID,WRITE,[ALARM_LED, alarm]))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[ALARM_LED, alarm])), self.uart, self.dir_com)
 
 	def set_alarm_shutdown(self,ID,alarm):
-		pkt=bytearray(makePacket(ID,WRITE,[ALARM_SHUTDOWN, alarm]))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[ALARM_SHUTDOWN, alarm])), self.uart, self.dir_com)
 
 #READING METHODS ONLY
 #will be soon implemented
@@ -125,33 +114,44 @@ class ax12(object):
 #WRITING METHODS ONLY
 
 	def set_torque_enable(self,ID,enable):
-		pkt=bytearray(makePacket(ID,WRITE,[TORQUE_ENABLE, enable]))
-		self.uart.write(pkt)
+		sendPacke(bytearray(makePacket(ID,WRITE,[TORQUE_ENABLE, enable])), self.uart, self.dir_com)
 
 	def set_led(self,ID,led):
-		pkt=bytearray(makePacket(ID,WRITE,[LED, led]))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[LED, led])), self.uart, self.dir_com)
 
 	def goal_position(self,ID,angle):
-		pkt=bytearray(makePacket(ID,WRITE,[GOAL_POSITION]+le(int(angle/300*1023))))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[GOAL_POSITION]+le(int(angle/300*1023)))), self.uart, self.dir_com)
 
 	def goal_speed(self,ID,speed):
-		pkt=bytearray(makePacket(ID,WRITE,[MOVING_SPEED]+le(speed)))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[MOVING_SPEED]+le(speed))), self.uart, self.dir_com)
 
 	def set_torque_limit(self,ID,torque):
-		pkt=bytearray(makePacket(ID,WRITE,[TORQUE_LIMIT]+le(torque)))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[TORQUE_LIMIT]+le(torque))), self.uart, self.dir_com)
 
 	def set_led(self,ID,led):
-		pkt=bytearray(makePacket(ID,WRITE,[led]))
-		self.uart.write(pkt)
+		sendPacket(bytearray(makePacket(ID,WRITE,[led])), self.uart, self.dir_com)
+		
 
 #READING METHODS ONLY
 #will be soon implemented
 
 #=================================================================
+
+
+#function to send instruction
+def sendPacket(packet, uart, dir_com):
+	dir_com.value(1)
+	uart.write(packet)
+	
+	tinit=utime.ticks_us()
+	while (utime.ticks_us()-tinit)<500:
+		pass
+	dir_com.value(0)
+	resp=uart.read()
+	if resp != None:
+		return list(resp)
+
+
 
 #function to construct a packet easily
 def makePacket(ID, instr, params=None):
