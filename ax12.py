@@ -81,7 +81,7 @@ class ax12(object):
 	def set_baud_rate(self,ID,baudrate, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[BAUD_RATE, baudrate])), self.uart, self.dir_com, self.rtime, rxbuf)
 
-	def set_delay(self,ID,delay):
+	def set_return_delay_time(self,ID,delay):
 		sendPacket(bytearray(makePacket(ID,WRITE,[RETURN_DELAY_TIME, delay])), self.uart, self.dir_com, self.rtime, rxbuf)
 
 	def set_cw_angle_limit(self,ID,angle, rxbuf=15):
@@ -101,6 +101,9 @@ class ax12(object):
 
 	def set_max_torque(self,ID,torque, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[MAX_TORQUE]+le(torque))), self.uart, self.dir_com, self.rtime, rxbuf)
+
+	def set_status_return_level(self,ID,status,rxbuf=15):
+		sendPacket(bytearray(makePacket(ID,WRITE,[STATUS_RETURN_LEVEL,status])), self.uart, self.dir_com, self.rtime,rxbuf)
 
 	def set_alarm_led(self,ID,alarm, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[ALARM_LED, alarm])), self.uart, self.dir_com, self.rtime, rxbuf)
