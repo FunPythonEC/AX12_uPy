@@ -155,7 +155,23 @@ class ax12(object):
 		return resp
 
 	def read_status_return_level(self,ID,rxbuf=15):
-		resp=sendPacket(bytearray(makePacket(ID,READ,[STATUS_RETURN_LEVEL])),, self.uart, self.dir_com, self.rtime,rxbuf)
+		resp=sendPacket(bytearray(makePacket(ID,READ,[STATUS_RETURN_LEVEL])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_alarm_led(self,ID,rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[ALARM_LED])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_alarm_shutdown(self,ID,rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[ALARM_SHUTDOWN])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_down_calibration(self,ID,rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[DOWN_CALIBRATION])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_up_calibration(self,ID,rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[UP_CALIBRATION])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
 
