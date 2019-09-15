@@ -125,6 +125,26 @@ class ax12(object):
 	def read_baud_rate(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID, READ,[BAUD_RATE])), self.uart, self.dir_com, self.rtime, rxbuf)
 		return resp
+
+	def read_return_delay_time(self, ID, rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[RETURN_DELAY_TIME])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_cw_angle_limit(self, ID, rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[CW_ANGLE_LIMIT])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_ccw_angle_limit(self,ID,rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[CCW_ANGLE_LIMIT])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_temperature_limit(self,ID,rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[HIGHEST_LIMIT_TEMPERATURE])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_lowest_voltage(self,ID,rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[LOWEST_LIMIT_VOLTAGE])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
 	
 
 
