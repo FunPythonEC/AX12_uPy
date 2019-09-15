@@ -145,7 +145,18 @@ class ax12(object):
 	def read_lowest_voltage(self,ID,rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[LOWEST_LIMIT_VOLTAGE])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
-	
+
+	def read_highest_voltage(self,ID,rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[HIGHEST_LIMIT_VOLTAGE])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_max_torque(self,ID,rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[MAX_TORQUE])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_status_return_level(self,ID,rxbuf=15):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[STATUS_RETURN_LEVEL])),, self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
 
 
 #==============================RAM METHODS=========================================
