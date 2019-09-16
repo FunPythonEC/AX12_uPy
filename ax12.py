@@ -182,10 +182,10 @@ class ax12(object):
 #WRITING METHODS ONLY
 
 	def set_torque_enable(self,ID,enable, rxbuf=15):
-		sendPacke(bytearray(makePacket(ID,WRITE,[TORQUE_ENABLE, enable])), self.uart, self.dir_com, self.rtime, self.rxbuf)
+		sendPacke(bytearray(makePacket(ID,WRITE,[TORQUE_ENABLE, enable])), self.uart, self.dir_com, self.rtime, rxbuf)
 
 	def set_led(self,ID,led, rxbuf=15):
-		sendPacket(bytearray(makePacket(ID,WRITE,[LED, led])), self.uart, self.dir_com, self.rtime, self.rxbuf)
+		sendPacket(bytearray(makePacket(ID,WRITE,[LED, led])), self.uart, self.dir_com, self.rtime, rxbuf)
 
 	def set_cw_compliance_margin(self,ID,margin, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[CW_COMPLIENCE_MARGIN,margin])), self.uart, self.dir_com, self.rtime,rxbuf)
@@ -199,14 +199,14 @@ class ax12(object):
 	def set_ccw_compliance_slope(self,ID,margin, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[CCW_COMPLIENCE_SLOPE,margin])), self.uart, self.dir_com, self.rtime,rxbuf)
 
-	def goal_position(self,ID,angle):
-		sendPacket(bytearray(makePacket(ID,WRITE,[GOAL_POSITION]+le(int(angle/300*1023)))), self.uart, self.dir_com, self.rtime, self.rxbuf)
+	def goal_position(self,ID,angle,rxbuf=15):
+		sendPacket(bytearray(makePacket(ID,WRITE,[GOAL_POSITION]+le(int(angle/300*1023)))), self.uart, self.dir_com, self.rtime, rxbuf)
 
 	def goal_speed(self,ID,speed, rxbuf=15):
-		sendPacket(bytearray(makePacket(ID,WRITE,[MOVING_SPEED]+le(speed))), self.uart, self.dir_com, self.rtime, self.rxbuf)
+		sendPacket(bytearray(makePacket(ID,WRITE,[MOVING_SPEED]+le(speed))), self.uart, self.dir_com, self.rtime, rxbuf)
 
 	def set_torque_limit(self,ID,torque, rxbuf=15):
-		sendPacket(bytearray(makePacket(ID,WRITE,[TORQUE_LIMIT]+le(torque))), self.uart, self.dir_com, self.rtime, self.rxbuf)
+		sendPacket(bytearray(makePacket(ID,WRITE,[TORQUE_LIMIT]+le(torque))), self.uart, self.dir_com, self.rtime, rxbuf)
 
 	def set_lock(self,ID,status, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[LOCK,status])), self.uart, self.dir_com, self.rtime,rxbuf)
