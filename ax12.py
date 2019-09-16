@@ -215,7 +215,8 @@ class ax12(object):
 		sendPacket(bytearray(makePacket(ID,WRITE,[PUNCH]+le(punch))), self.uart, self.dir_com, self.rtime,rxbuf)
 
 #READING METHODS ONLY
-#will be soon implemented
+
+
 
 #=================================================================
 
