@@ -187,6 +187,18 @@ class ax12(object):
 	def set_led(self,ID,led):
 		sendPacket(bytearray(makePacket(ID,WRITE,[LED, led])), self.uart, self.dir_com, self.rtime, self.rxbuf)
 
+	def set_cw_compliance_margin(self,ID,margin):
+		sendPacket(bytearray(makePacket(ID,WRITE,[CW_COMPLIENCE_MARGIN,margin])), self.uart, self.dir_com, self.rtime,rxbuf)
+
+	def set_ccw_compliance_margin(self,ID,margin):
+		sendPacket(bytearray(makePacket(ID,WRITE,[CCW_COMPLIENCE_MARGIN,margin])), self.uart, self.dir_com, self.rtime,rxbuf)
+
+	def set_cw_compliance_slope(self,ID,margin):
+		sendPacket(bytearray(makePacket(ID,WRITE,[CW_COMPLIENCE_SLOPE,margin])), self.uart, self.dir_com, self.rtime,rxbuf)
+
+	def set_ccw_compliance_slope(self,ID,margin):
+		sendPacket(bytearray(makePacket(ID,WRITE,[CCW_COMPLIENCE_SLOPE,margin])), self.uart, self.dir_com, self.rtime,rxbuf)
+
 	def goal_position(self,ID,angle):
 		sendPacket(bytearray(makePacket(ID,WRITE,[GOAL_POSITION]+le(int(angle/300*1023)))), self.uart, self.dir_com, self.rtime, self.rxbuf)
 
@@ -196,9 +208,11 @@ class ax12(object):
 	def set_torque_limit(self,ID,torque):
 		sendPacket(bytearray(makePacket(ID,WRITE,[TORQUE_LIMIT]+le(torque))), self.uart, self.dir_com, self.rtime, self.rxbuf)
 
-	def set_led(self,ID,led):
-		sendPacket(bytearray(makePacket(ID,WRITE,[led])), self.uart, self.dir_com, self.rtime, self.rxbuf)
-		
+	def set_lock(self,ID,status):
+		sendPacket(bytearray(makePacket(ID,WRITE,[LOCK,status])), self.uart, self.dir_com, self.rtime,rxbuf)
+
+	def set_punch(self,ID, punch):
+		sendPacket(bytearray(makePacket(ID,WRITE,[PUNCH]+le(punch))), self.uart, self.dir_com, self.rtime,rxbuf)
 
 #READING METHODS ONLY
 #will be soon implemented
