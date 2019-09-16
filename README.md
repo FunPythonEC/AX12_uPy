@@ -63,24 +63,33 @@ Returns Low-High byte number in a list. `h` is the int number.
 ~~~~ python
 from ax12 import *
 dxl=ax12(dir_com=22)
-#cambio de id, de 1 a 2
+#change of ID from 1 to 2
 pkt=makePacket(1,WRITE,SET_ID,[2]) #packet made
-dxl.sendPacket(pkt)
+dxl.sendPacket(pkt) #packet sent
 ~~~~
 In the above example a kinda raw change of ID is made. In this case the parameter for the ID can be specified in only one byte. If the parameter can't be defined this way, the method `le` must be used which already return a list.
 
 #### Especificos de escritura
-##### EEPROM
-Tener en cuenta que para que el EEPROM sea modificable, es necesario que TORQUE_ENABLE tenga 0 como valor, si es cambiado a 1, EEPROM no puede ser modificado.
 
-|Metodo|¿Qué hace?|Descripcion de parametros|
+For all methods, the ID of the servo is always needed, so be sure to always define it. Also all of them have a parameter called `rxbuf`that can be specified if wanted (not showed in the table).
+
+##### EEPROM
+Have in mind that if the EEPROM wants to be modified, it is needed that TORQUE_ENABLE is 0, if it is 1, then EEPROM can't be modified.
+
+|Method|Function|Parameter description|
 |-----------|-----------|--------------------------------------|
-|||**|
-|set_id(ID,newID)|Ayuda a cambiar o setear un id nuevo a uno de los motores.|**ID**: es el id del motor al que se le cambiara. **newID**: es el nuevo ID que se sobreescribira|
-|set_baudrate(ID,baudrate)|Seteo de baud rate a uno de los motores.|**baudrate**:los valores van desde 0 a 3. Cada uno especificando un valor de baudios tal y como se muestra en la documentación del motor, que puede ser desde 9600 hasta 1000000.|
-|set_cw_angle_limit(ID,angle)|Seteo de ángulo límite para el movimiento del motor en sentido horario.|**angle**: en este caso, por las capacidades del motor xl320, el valor de angulos para el cual permite el giro funcionando como un servo motor (JOINT mode) es desde 0 hasta 300 grados.|
-|set_ccw_angle_limit(ID, angle)|Seteo de ángulo límite para el movimiento del motor en sentido antihorario.|**angle**: en este caso, por las capacidades del motor xl320, el valor de angulos para el cual permite el giro funcionando como un servo motor (JOINT mode) es desde 0 hasta 300 grados.|
-|set_max_torque(ID,torque)|Seteo de torque máximo que puede ejercer el motor.|**torque**: el valor puede variar de 0 a 1023, siendo 1023 el máximo de torque que es capaz de ejercer el motor.|
+|`set_id(ID,NID)`|Changes de ID of the servo.|`newID` : is the new ID wanted to be set.|
+|`set_baud_rate(ID,baudrate)`|Change of baud rate.|`baudrate`: the value by default is 1. The other values are specified in the doc found in the repo.|
+| `set_return_delay_time(ID,delay)` | Change of the return delay time. | `delay`: it is the 2*time that passes until the servo responds. |
+|`set_cw_angle_limit(ID,angle)`|Set of limit angle for cw direction.|`angle`: value between 0 and 1023, 0 correspond to 0 degrees and 1023 to 300 degrees.|
+|`set_ccw_angle_limit(ID, angle)`|Set of limit angle for ccw direction.|`angle`: value between 0 and 1023, 0 correspond to 0 degrees and 1023 to 300 degrees.|
+|`set_temperature_limit(ID,temp)`|Set limit hight temperature the servo would permit to operate.|`temp`: the temperature in Degrees Celsius, can be from 0 to 255.|
+|`set_lowest_voltage(ID,volt)`|Set lowest voltage of operation.|`volt`: minimum voltage so that the servo would operate.|
+|`set_highest_voltage(ID,volt)`|Set highest voltage of operation.|`volt`: minimum voltage so that the servo would operate.|
+|`set_max_torque(ID,torque)`|Set max torque the servo would give.|`torque`: value from 0 to 1023.|
+|`set_status_return_level(ID,status)`|Change of the status return level.|`status`: value from 0 to 2.|
+|`set_alarm_led(ID,alarm)`|Set led alarm.|`alarm`: corresponds to 0 for off and 1 for on.|
+|`set_alarm_shutdown(ID,alarm)`|Set shutdown alarm.|`alarm`: value of 0 if off and 1 for on.|
 
 ##### RAM
 
