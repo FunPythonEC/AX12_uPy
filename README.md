@@ -78,7 +78,7 @@ Have in mind that if the EEPROM wants to be modified, it is needed that TORQUE_E
 
 |Method|Function|Parameter description|
 |-----------|-----------|--------------------------------------|
-|`set_id(ID,NID)`|Changes de ID of the servo.|`newID` : is the new ID wanted to be set.|
+|`set_id(ID,NID)`|Change of ID of the servo.|`newID` : is the new ID wanted to be set.|
 |`set_baud_rate(ID,baudrate)`|Change of baud rate.|`baudrate`: the value by default is 1. The other values are specified in the doc found in the repo.|
 | `set_return_delay_time(ID,delay)` | Change of the return delay time. | `delay`: it is the 2*time that passes until the servo responds. |
 |`set_cw_angle_limit(ID,angle)`|Set of limit angle for cw direction.|`angle`: value between 0 and 1023, 0 correspond to 0 degrees and 1023 to 300 degrees.|
