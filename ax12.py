@@ -181,102 +181,102 @@ class ax12(object):
 #==============================RAM METHODS=========================================
 #WRITING METHODS ONLY
 
-	def set_torque_enable(self,ID,enable):
+	def set_torque_enable(self,ID,enable, rxbuf=15):
 		sendPacke(bytearray(makePacket(ID,WRITE,[TORQUE_ENABLE, enable])), self.uart, self.dir_com, self.rtime, self.rxbuf)
 
-	def set_led(self,ID,led):
+	def set_led(self,ID,led, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[LED, led])), self.uart, self.dir_com, self.rtime, self.rxbuf)
 
-	def set_cw_compliance_margin(self,ID,margin):
+	def set_cw_compliance_margin(self,ID,margin, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[CW_COMPLIENCE_MARGIN,margin])), self.uart, self.dir_com, self.rtime,rxbuf)
 
-	def set_ccw_compliance_margin(self,ID,margin):
+	def set_ccw_compliance_margin(self,ID,margin, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[CCW_COMPLIENCE_MARGIN,margin])), self.uart, self.dir_com, self.rtime,rxbuf)
 
-	def set_cw_compliance_slope(self,ID,margin):
+	def set_cw_compliance_slope(self,ID,margin, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[CW_COMPLIENCE_SLOPE,margin])), self.uart, self.dir_com, self.rtime,rxbuf)
 
-	def set_ccw_compliance_slope(self,ID,margin):
+	def set_ccw_compliance_slope(self,ID,margin, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[CCW_COMPLIENCE_SLOPE,margin])), self.uart, self.dir_com, self.rtime,rxbuf)
 
 	def goal_position(self,ID,angle):
 		sendPacket(bytearray(makePacket(ID,WRITE,[GOAL_POSITION]+le(int(angle/300*1023)))), self.uart, self.dir_com, self.rtime, self.rxbuf)
 
-	def goal_speed(self,ID,speed):
+	def goal_speed(self,ID,speed, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[MOVING_SPEED]+le(speed))), self.uart, self.dir_com, self.rtime, self.rxbuf)
 
-	def set_torque_limit(self,ID,torque):
+	def set_torque_limit(self,ID,torque, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[TORQUE_LIMIT]+le(torque))), self.uart, self.dir_com, self.rtime, self.rxbuf)
 
-	def set_lock(self,ID,status):
+	def set_lock(self,ID,status, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[LOCK,status])), self.uart, self.dir_com, self.rtime,rxbuf)
 
-	def set_punch(self,ID, punch):
+	def set_punch(self,ID, punch, rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,WRITE,[PUNCH]+le(punch))), self.uart, self.dir_com, self.rtime,rxbuf)
 
 #READING METHODS ONLY
 
-	def read_torque_enable(self,ID):
+	def read_torque_enable(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[TORQUE_ENABLE])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_led(self,ID):
+	def read_led(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[LED])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_cw_compliance_margin(self,ID):
+	def read_cw_compliance_margin(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[CW_COMPLIENCE_MARGIN])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_ccw_compliance_margin(self,ID):
+	def read_ccw_compliance_margin(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[CCW_COMPLIENCE_MARGIN])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_cw_compliance_slope(self,ID):
+	def read_cw_compliance_slope(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[CW_COMPLIENCE_SLOPE])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_ccw_compliance_slope(self,ID):
+	def read_ccw_compliance_slope(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[CCW_COMPLIENCE_SLOPE])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_goal_position(self,ID):
+	def read_goal_position(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[GOAL_POSITION])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_moving_speed(self,ID):
+	def read_moving_speed(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[MOVING_SPEED])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_torque_limit(self,ID):
+	def read_torque_limit(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[TORQUE_LIMIT])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_present_position(self,ID):
+	def read_present_position(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[PRESENT_POSITION])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_present_speed(self, ID):
+	def read_present_speed(self, ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[PRESENT_SPEED])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_present_load(self,ID):
+	def read_present_load(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[PRESENT_LOAD])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_present_voltage(self,ID):
+	def read_present_voltage(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[PRESENT_VOLTAGE])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_moving(self,ID):
+	def read_moving(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[MOVING])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_lock(self,ID):
+	def read_lock(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[LOCK])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
-	def read_punch(self,ID):
+	def read_punch(self,ID, rxbuf=15):
 		resp=sendPacket(bytearray(makePacket(ID,READ,[PUNCH])), self.uart, self.dir_com, self.rtime,rxbuf)
 		return resp
 
