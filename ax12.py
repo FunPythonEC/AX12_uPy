@@ -53,8 +53,9 @@ PUNCH 						= 0x30
 #object to initialize the servo
 class ax12(object):
 
-	#for the constructor, only dir_com needs to be specifiec
-	#which represents which pin will control the direction of communication.
+	#for the constructor, only dir_com needs to be specific
+	#which represents which pin will control the direction of communication
+	#rtime is usuall known by user but correspond to RETURN_DELAY_TIME
 	def __init__(self, dir_com, baudrate=1000000, serialid=2, rtime=500):
 
 		self.baudrate=baudrate
@@ -72,6 +73,8 @@ class ax12(object):
 #METHODS
 #in the methods, every parameter that needs to be specified as a Low/High Byte
 #is defined with the help of the le() function
+#for all methods a parameter called rxbuf have been added which specifies the amount of bytes
+#that would be wanted to be received when reading, by default it is 15
 #==============================EEPROM METHODS======================================
 #WRITING METHODS ONLY
 
@@ -281,21 +284,24 @@ class ax12(object):
 		return resp
 
 #=================================================================
-
+#RESET METHODS
+	def reset(self,ID,rxbuf=15):
+		sendPacket(bytearray(makePacket(ID,RESET), self.uart, self.dir_com, self.rtime,rxbuf))
 
 #function to send instruction
 def sendPacket(packet, uart, dir_com, rtime, rxbuf):
-	dir_com.value(1)
+	dir_com.value(1) #turn on so packet is sent
 	uart.write(packet)
 	
+	#time is traced in order to know when to listen
 	tinit=utime.ticks_us()
 	while (utime.ticks_us()-tinit)<rtime:
 		pass
 
-	dir_com.value(0)
+	dir_com.value(0) #off to receive packet
 
 	tinit=utime.ticks_us()
-	while (utime.ticks_us()-tinit)<1400:
+	while (utime.ticks_us()-tinit)<1600: #timeout of 1600us
 		resp=uart.read(rxbuf)
 		if resp is not None:
 			return list(resp)
@@ -306,18 +312,12 @@ def sendPacket(packet, uart, dir_com, rtime, rxbuf):
 #function to construct a packet easily
 def makePacket(ID, instr, params=None):
 
-	pkt = []
-	pkt += [ID]
+	pkt = HEADER+[ID]
 	if params:
-		pkt += [len(params)+2]
+		pkt += [len(params)+2]+[instr]+params
 	else:
-		pkt += [2]
-	pkt += [instr]  # instruction
-	if params:
-		pkt += params
-	pkt += [checksum(pkt)]
-	pkt = HEADER+pkt  # header and reserved byte
-	print(pkt)
+		pkt += [2]+[instr]
+	pkt += [checksum(pkt[2:])]
 	return pkt
 
 #turn Low-High byte into decimal
