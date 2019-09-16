@@ -216,7 +216,69 @@ class ax12(object):
 
 #READING METHODS ONLY
 
+	def read_torque_enable(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[TORQUE_ENABLE])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
 
+	def read_led(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[LED])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_cw_compliance_margin(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[CW_COMPLIENCE_MARGIN])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_ccw_compliance_margin(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[CCW_COMPLIENCE_MARGIN])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_cw_compliance_slope(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[CW_COMPLIENCE_SLOPE])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_ccw_compliance_slope(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[CCW_COMPLIENCE_SLOPE])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_goal_position(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[GOAL_POSITION])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_moving_speed(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[MOVING_SPEED])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_torque_limit(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[TORQUE_LIMIT])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_present_position(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[PRESENT_POSITION])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_present_speed(self, ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[PRESENT_SPEED])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_present_load(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[PRESENT_LOAD])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_present_voltage(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[PRESENT_VOLTAGE])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_moving(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[MOVING])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_lock(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[LOCK])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
+
+	def read_punch(self,ID):
+		resp=sendPacket(bytearray(makePacket(ID,READ,[PUNCH])), self.uart, self.dir_com, self.rtime,rxbuf)
+		return resp
 
 #=================================================================
 
