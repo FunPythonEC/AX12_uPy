@@ -6,67 +6,69 @@ This library has been  by consulting the following link: https://github.com/jere
 ## Hardware
 Since ESPXXXX MicroControllers support a UART communication, while Dynamixel Servo Motors use OneWire, an specific hardware that allows this communication between these two protocols is needed. For that, a driver board is being developed in the following repo: [OpenFPy](https://github.com/FunPythonEC/OpenFpy)
 
-## Comunicación con el motor
+Unfortunately, while developing this library I noticed that the MicroPython firmware for the ESP8266 doesn't support the parameter `txbuf` in the UART definition, meaning in the end this library can so far only be used with the ESP32 and maybe some other boards that can work maybe with this kind of generic form of MicroPython.
 
-Para la comunicación se utiliza UART. A pesar de que los motores dynamixel para la comunicación utilizan un pin DATA, este puede ser manejado utilizando la siguiente configuración electrónica: [UART to 1-WIRE interface](https://hackaday.com/2015/01/29/easier-uart-to-1-wire-interface/)
+## Comunication
+As mentioned before, UART is used in order to send data to the servo. A circuit can also be made in order to interface the microcontroller with the servo, which an be found in the following link: [Circuit interface ESP-Dynamixel](https://electronics.stackexchange.com/questions/243740/understanding-how-a-tristate-buffer-works-74ls241) Here a pin for direction is needed apart from the TX and RX used from the ESP32 for UART. As default the following pins are needed:
+* TX pin: in everyboard the position of the pin can differ, however any can be used and it is specified with the `serialid` parameter in the constructor of the `ax12` object.
+* RX pin: same condition as TX pin.
+* Ground pin
+* 5V pin: used to power the integrated circuit but would work with external power.
+* Direction pin: specified as `dir_com`, it can be any gpio from the microcontroller.
 
-Para su uso en la parte de programación, se ha especificado en el constructor de `ax12()`, el id de UART a usar que es especificado como serialid, ya que ciertas placas carecen de cierta cantidad de objetos UART para crear. Correspondiendo entonces serialid al numero de UART usado en el microcontrolador.  Para más información de UART con uPy: [UART MicroPython](https://docs.micropython.org/en/latest/library/machine.UART.html)
+In the case of the ESP32, it has available 3 TX and RX pins, meaning 3 UART interfaces can be established. In order to specify which one is wanted to control the servo, the parameter `serialid` needs to be defined when creating the `ax12` objects, if it is 0, TX0 and RX0 ares used, and so on. For more information about UART: [UART MicroPython](https://docs.micropython.org/en/latest/library/machine.UART.html)
 
-### Nota
-
-A pesar de que para controlar el motor se puede utilizar la configuracion de [UART to 1-WIRE interface](https://hackaday.com/2015/01/29/easier-uart-to-1-wire-interface/), para tener un sistema más robusto se ha utilizado lo siguiente [Robotis TTL Communication](http://emanual.robotis.com/docs/en/dxl/x/xl320/#ttl-communication). Para esta es necesario especificar la dirección en que se envian datos. Para lo cual en la clase `xl320()`se especifica un pin de dirección con el cual poder manejar si se envia o se recibe datos al ESP, lo cual es sumamente necesario para la lectura.
-
-## Video
-
-
-## `AX12.PY`
+## `ax12.py`
  This is the core script that allows the use of Dynamixel Servos with MicroPython. In it a class called `ax12` has been defined with its respective constructor and methods. How to use it is specified below.
-
-
-### UART-To-1Wire
-
-![UART to 1-Wire](https://hackaday.com/wp-content/uploads/2015/01/onewire.png?w=800)
 
 ### Constructor
 
 ~~~~ python
-ax12(self, dir_com, baudrate=1000000, serialid=2)
+from ax12 import ax12
+ax12(dir_com, baudrate=1000000, serialid=2, rtime=500)
 ~~~~
 
-* dir_com: debido a la interface de UART-1Wire, para prevenir el fallo de lectura se utiliza un pin que especifica en que dirección se transmiten los datos, que es especificado con esta variable, que basicamente representa el pin con el que se manejara la dirección.
-* baudrate: define los baudios con el cual se utilizará el motor
-* serialid: define que pines tx, rx del ESP se usaran, por default UART(2)
-Tener en cuenta que hay valores especificados como default en el constructor de la clase, por lo que si se quiere unos distintos, este debe ser especficado. Además se permite la creación de distintos objetos para el uso de motores, en el caso del ESP32 se permite hasta 3 lineas de motores. Para el ESP8266 tan solo 2. Con linea de motores, se refiere a motores conectados en serie en distintos buses.
+* `dir_com`: corresponds to the number of the gpio that is going to be used in order to control the transfer of packets between the servo and the microcontroller. It is the only parameter which doesn't have a value as default.
+* `baudrate`: defines the baudrate of the communication, by default it is 1Mbps, however it could be changed depending of the used by the servo.
+* `serialid`: defines which TX and RX are used, by default the value is for `UART(2)`.
+* `rtime`: corresponds to the Return delay time. It is the time that the servo awaits in order to respond after it receives a package. For every servo line this could be different. By default it is 500us.
 
-#### Ejemplo de inicialización de objeto
+#### Examples of use
 
 ~~~~ python
 from ax12 import *
-dxl=ax12(dir_com=22) #dir_com=22 es la
+dxl=ax12(dir_com=22) #GPIO22 would be the one used
+					#in order to control the servo
 ~~~~
 
-Si se desea especificar el baudrate o el serial uart a usar:
+In case `baudrate`, `serialid` and `rtime` are different:
 ~~~~ python
 from ax12 import *
-dxl=ax12(dir_com=22,baudrate=15200,serialid=1)
+dxl=ax12(dir_com=22,baudrate=115200,serialid=1,rtime=300)
 ~~~~
 
-### Métodos
-Para la clase se han creado una serie de metodos especificos para su uso. En los cuales se usan funciones encontradas en el mismo script. Como le() y makePacket().
+### Functions and methods for `ax12.py`
+A series of functions and methods have been implemented in the script. There are some generic functions that can be used in order to control the servo since the package creation and the methods from the class to do more specific actions. This is detailed below:
 
-Los metodos especificos, son para el control sobre el ID, baudrate, goal speed, present speed, etc. Pero también se agrego un metodo llamado sendPacket() el cual es un método genérico, este es más detallado en la próxima sección.
-#### Genéricos
-##### sendPacket()
-Este metodo del objeto, esta principalmente para poder enviar por UART, un paquete propio creado.
-Para la creación de un paquete se puede usar el metodo de `makePacket(ID, instr, reg=None, params=None)`, el cual regresa un array con los valores a enviar por serial.
-###### Ejemplo
+#### Generic methods
+##### `makePacket(ID, instr, params=None)`
+This method can be used and is used to construct the packet to send to the servo. `ID` corresponds to the ID of the servo, `instr` is the instruction that want to be sent and `params` a list of the parameters that may include the item address and values needed like speed or position.
+##### `sendPacket(packet,uart,dir_com,rtime,rxbuf)`
+This methos is used to send the packet returned by `makePacket`, which correspond to the parameter packet, also `uart`corresponds to the UART object used, `dir_com` the object `Pin` already specified, `rtime` explained before and `rxbuf` which is the length or maximum amount of bytes that want to be received once the servo responds.
+##### `word(l, h)`
+Used in order to get an intl from a Low-High byte number. `l`is the low byte and `h` high byte. Returns an int number.
+##### `le(h)`
+Returns Low-High byte number in a list. `h` is the int number.
+###### Example
 ~~~~ python
 from ax12 import *
 dxl=ax12(dir_com=22)
 #cambio de id, de 1 a 2
-pkt=makePacket(1,WRITE,XL320_ID,[2])
+pkt=makePacket(1,WRITE,SET_ID,[2]) #packet made
+dxl.sendPacket(pkt)
 ~~~~
-Tener en cuenta que en el ejemplo anterior, se hace un cambio de id, el cual es un registro al cual le corresponde 1 byte, por lo que en el metodo basta con poner como parametro [2], mientras que si este fuera de 2 bytes, se tendria que usar el metodo le() que se encuentra en el mismo script. Basicamente el metodo le() se encarga de representar un numero mayor a 255 en dos bytes.
+In the above example a kinda raw change of ID is made. In this case the parameter for the ID can be specified in only one byte. If the parameter can't be defined this way, the method `le` must be used which already return a list.
+
 #### Especificos de escritura
 ##### EEPROM
 Tener en cuenta que para que el EEPROM sea modificable, es necesario que TORQUE_ENABLE tenga 0 como valor, si es cambiado a 1, EEPROM no puede ser modificado.
