@@ -288,6 +288,24 @@ class ax12(object):
 	def reset(self,ID,rxbuf=15):
 		sendPacket(bytearray(makePacket(ID,RESET), self.uart, self.dir_com, self.rtime,rxbuf))
 
+	def sendPacket(self, packet, uart=self.uart, dir_com=self.dir_com, rtime=self.rtime, rxbuf=15):
+		dir_com.value(1) #turn on so packet is sent
+		uart.write(packet)
+		
+		#time is traced in order to know when to listen
+		tinit=utime.ticks_us()
+		while (utime.ticks_us()-tinit)<rtime:
+			pass
+
+		dir_com.value(0) #off to receive packet
+
+		tinit=utime.ticks_us()
+		while (utime.ticks_us()-tinit)<1600: #timeout of 1600us
+			resp=uart.read(rxbuf)
+			if resp is not None:
+				return list(resp)
+		return None
+
 #function to send instruction
 def sendPacket(packet, uart, dir_com, rtime, rxbuf):
 	dir_com.value(1) #turn on so packet is sent
