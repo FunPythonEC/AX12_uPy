@@ -106,45 +106,55 @@ For all methods, the ID of the servo is always needed, so be sure to always defi
 | `set_lock(ID,status)`                  |Define if the EEPROM can be modified.|`status`: a value of 0 if the EEPROM is modified, and 1 if it doesn't want to be modified.|
 | `set_punch(ID, punch)`                 |Defines minimum current with which the servo would work.|`punch`:  The initial value is set to 0x20 and its maximum value is 0x3ff.|
 
-#### Especificos de lectura
+#### Specific read methods
 
-Todos los metodos de lectura tiene como parámetro nada más que el ID, por lo que no se explica a continucación, solo que hace cada metodo.
-
-Tener en cuenta que todos los metodos de lectura, al usarlos, por ahora imprimen todo lo que le llega al microcontrolador. Se tiene que entonces identificar que generalmente el unico print que se mostraría es lo que envia como respuesta el motor. Lo cual correspondera a un paquete del cual se tendrá que identificar los valores regresados.
+Here could be more important to include the parameter `rxbuf` so that you get just what you want from the servo. However, it already has a value and every of the reading methods returns the packet received in `list` form.
 
 ##### EEPROM
 
-| Metodos                  | ¿Qué hace?                                                   |
+| Methods                  | Returned info                                                |
 | ------------------------ | ------------------------------------------------------------ |
-| read_model_number(ID)    | Lectura el numero de modelo del motor.                       |
-| read_firmware(ID)        | Lectura el firmware que tiene el motor.                      |
-| read_baudrate(ID)        | Lectura el valor de baud rate con el que esta trabajando el motor para la comunicación. |
-| read_delay_time(ID)      | Lectura el tiempo de delay entre escritura y respuesta. **Todavia no esta implementado el metodo para el cambio de delay time** |
-| read_cw_angle_limit(ID)  | Lectura de angulo limite para el giro horario.               |
-| read_ccw_angle_limit(ID) | Lectura de angulo limite para el giro anti-horario.          |
-| read_control_mode(ID)    | Lectura de modo de control actual.                           |
-| read_max_torque(ID)      | Lectura de torque máximo al cual ha sido seteado el motor.   |
-| read_return_level(ID)    | Lectura de nivel de retorno en el motor.                     |
+| `read_model_number(ID)`  | Model number of the servo.                                   |
+| `read_firmware(ID)`      | Firmware embedded in the servo.                              |
+| `read_id(ID)` | ID of the connected servo. |
+| `read_baud_rate(ID)`     | Current baud rate with which the servo communicates. |
+| `read_return_delay_time(ID)` | The time the servo takes in order to respond after receiving its packet. |
+| `read_cw_angle_limit(ID)` | Limit angle in which the servo can turn with cw direction. |
+| `read_ccw_angle_limit(ID)` | Limit angle in which the servo can turn with ccw direction. |
+| `read_temperature_limit(ID)` | Limit high temperature with which the servo would work. |
+| `read_lowest_voltage(ID)` | Lowest voltage with which the servo would work. |
+| `read_highest_voltage(ID)` | Highest voltage with which the servo would work. |
+| `read_max_torque(ID)` | Max torque the servo would give. |
+| `read_status_return_level(ID)` | Number of the status return level. |
+| `read_alarm_led(ID)` | The alarm led value. |
+| `read_alarm_shutdown(ID)` | The alarm shutdown value. |
+| `read_down_calibration(ID) ` | The down calibration value. |
+| `read_up_calibration(ID)` | The up calibration value. |
 
 ##### RAM
-| Metodos                      | ¿Qué hace?                                                   |
-| ---------------------------- | ------------------------------------------------------------ |
-| read_torque_enable(ID)       | Lectura del estado de torque, si esta activado o no.         |
-| read_goal_torque(ID)         | Lectura de el valor de torque al que se haya seteado el motor. |
-| read_goal_speed(ID)          | Lectura del valor de goal speed puesto.                      |
-| read_present_position(ID)    | Lectura de la posición actual del motor.                     |
-| read_present_speed(ID)       | Lectura de la velocidad actual del motor.                    |
-| read_present_load(ID)        | Lectura del peso o fuerza ejercida por el motor.             |
-| read_present_voltage(ID)     | Lectura del voltage presente suministrado al motor.          |
-| read_present_temperature(ID) | Lectura de temperatura actual del motor.                     |
-| read_moving(ID)              | Lectura de estado del motor, para saber si esta o no en movimiento. |
-| read_hw_error_status(ID)     | Lectura de estado de error de hardware.                      |
-| read_goal_position(ID)       | Lectura de valor de goal position indicado.                  |
-| read_punch(ID)               | Lectura de minima corriente suministrada al motor.           |
+| Methods                          | Returned info                                                |
+| -------------------------------- | ------------------------------------------------------------ |
+| `read_torque_enable(ID)`         | Returns if torque is enabled or not.                         |
+| `read_led(ID)`                   | Returns if the led is on or off.                             |
+| `read_cw_compliance_margin(ID)`  | Returns the compliance margin for cw direction.              |
+| `read_ccw_compliance_margin(ID)` | Returns the compliance margin for ccw direction.             |
+| `read_cw_compliance_slope(ID)`   | Returns the compliance slope for cw direction.               |
+| `read_ccw_compliance_slope(ID)`  | Returns the compliance slope for ccw direction.              |
+| `read_goal_position(ID)`         | Returns the last asked angle.                                |
+| `read_moving_speed(ID)`          | Returns the last requested speed.                            |
+| `read_torque_limit(ID)`          | Returns the torque limit.                                    |
+| `read_present_position(ID)`      | Returns the angle present position.                          |
+| `read_present_speed( ID)`        | Returns the current speed in which the servo is moving.      |
+| `read_present_load(ID)`          | Returns the current applied load.                            |
+| `read_present_voltage(ID)`       | Returns the current voltage received by the servo.           |
+| `read_moving(ID)`                | Returns a value that expresses if the servo is moving or not. |
+| `read_lock(ID)`                  | Returns if the EEPROM can be modified or not.                |
+| `read_punch(ID)`                 | Returns the current that the servo needs to work.            |
 
 
 
 
 
 ## Referencias
-
+* [Dynamixel Protocol 1.0](http://emanual.robotis.com/docs/en/dxl/protocol1/)
+* [Main info Dynamixel AX12](http://support.robotis.com/en/product/actuator/dynamixel/ax_series/dxl_ax_actuator.htm#Actuator_Address_28)
