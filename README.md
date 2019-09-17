@@ -69,14 +69,14 @@ dxl.sendPacket(pkt) #packet sent
 ~~~~
 In the above example a kinda raw change of ID is made. In this case the parameter for the ID can be specified in only one byte. If the parameter can't be defined this way, the method `le` must be used which already return a list.
 
-#### Especificos de escritura
+#### Specific write Methods
 
 For all methods, the ID of the servo is always needed, so be sure to always define it. Also all of them have a parameter called `rxbuf`that can be specified if wanted (not showed in the table).
 
 ##### EEPROM
-Have in mind that if the EEPROM wants to be modified, it is needed that TORQUE_ENABLE is 0, if it is 1, then EEPROM can't be modified.
 
-|Method|Function|Parameter description|
+
+|Method|Purpose|Parameter description|
 |-----------|-----------|--------------------------------------|
 |`set_id(ID,NID)`|Change of ID of the servo.|`newID` : is the new ID wanted to be set.|
 |`set_baud_rate(ID,baudrate)`|Change of baud rate.|`baudrate`: the value by default is 1. The other values are specified in the doc found in the repo.|
@@ -93,12 +93,18 @@ Have in mind that if the EEPROM wants to be modified, it is needed that TORQUE_E
 
 ##### RAM
 
-|Metodo|¿Qué hace?|Descripción de parámetros|
+|Method| Purpose                                                      | Parameter description                                        |
 |:-----------|------------|---------------------------------------|
-|torque_enable(ID,status)|Deshabilita o habilita el torque.|**status**: el valor puede ser 1 (wheel mode) o 2 (joint mode).|
-|goal_speed(ID,speed)|Pone una velocidad definida a la que se mueva el motor, funciona diferente dependiendo del modo de control en el que se encuentre.|**speed**: (JOINT) para este caso speed se refiere a la velocidad a la que girará el motor cuando se le especifique un ángulo, su valor puede ser entre 0-1023. (WHEEL) en este caso, se refiere a la velocidad a la que se quiere que se mueva el motor actualmente, su valor puede ser entre 0-2047. 0-1023 para que gire en un sentido. 1024-2047 para el otro.|
-|goal_position(ID,position)|Coloca al motor en una posición definida que se da por el ángulo como posición.|**position**: corresponde al ángulo en que se quiere que se ponga el motor.|
-|goal_torque(ID, torque)|Setea el torque en un valor definido.|**torque**: su valor es entre 0-1023, siendo 1023 el valor máximo.|
+|`set_torque_enable(ID,enable)`|Enables or disables the torque.|`enable`: 1 if it is enabled and 0 if it is not.|
+|`set_led(ID,led)`|Turns led on or off.|`led`: value of 1 for on and 0 for off.|
+|`set_cw_compliance_margin(ID,margin)`| Set the margin of error the servo can have when asked to be in certain position, for clockwise. | `margin`: the value can be between 0 and 255.                |
+| `set_ccw_compliance_margin(ID,margin)` |Set the margin of error the servo can have when asked to be in certain position, for counter clockwise.|`margin`: the value can be between 0 and 255.|
+| `set_cw_compliance_slope(ID,margin)`   |Set the slope that the servo has when turning clockwise.|`slope`: the value can be between 0 and 255.|
+| `goal_position(ID,angle)`              |Turn the servo to a defined angle.|`angle`: can be between 0 and 300 since in this case the conversion to degrees is always done.|
+| `goal_speed(ID,speed)`                 |Set the speed in which the servo turns. If it is in endless turn mode, which is when cw and ccw angle limits are 0, then the servo would work like a wheel or dc motor.|`speed`: Value can be between 0 and 1023. If it is in endless turn, then for 0-1023 range is for cw direction, and 1024-2046 for ccw direction.|
+| `set_torque_limit(ID,torque)`          |Set the limit torque of the servo.|`torque`: it is a value between 0-1023. If the power is turned on, the value of Max Torque is used as the initial value.|
+| `set_lock(ID,status)`                  |Define if the EEPROM can be modified.|`status`: a value of 0 if the EEPROM is modified, and 1 if it doesn't want to be modified.|
+| `set_punch(ID, punch)`                 |Defines minimum current with which the servo would work.|`punch`:  The initial value is set to 0x20 and its maximum value is 0x3ff.|
 
 #### Especificos de lectura
 
